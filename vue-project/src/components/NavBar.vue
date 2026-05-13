@@ -1,0 +1,146 @@
+<template>
+  <nav class="navbar navbar-expand-lg custom-navbar px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand brand-title" href="#"> 🏕️ CampXplore </a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <RouterLink :to="{ name: 'Accueil' }" class="nav-link custom-link">Accueil</RouterLink>
+          </li>
+
+          <li class="nav-item">
+            <RouterLink :to="{ name: 'Mes Emplacements' }" class="nav-link custom-link"
+              >Emplacements</RouterLink
+            >
+          </li>
+          <li v-show="UserInfos.IsConnected" class="nav-item">
+            <RouterLink :to="{ name: 'Mes Réservations' }" class="nav-link custom-link"
+              >Mes Réservations</RouterLink
+            >
+          </li>
+          <li v-show="UserInfos.IsConnected" class="nav-item">
+            <RouterLink :to="{ name: 'Profil' }" class="nav-link custom-link"
+              >{{ UserInfos.Nom }}, {{ UserInfos.Prenom }}</RouterLink
+            >
+          </li>
+          <li v-show="UserInfos.IsConnected" class="nav-item">
+            <RouterLink :to="{ name: 'Deconnexion' }" class="nav-link custom-link"
+              >Déconnexion</RouterLink
+            >
+          </li>
+          <li v-show="UserInfos.IsAdmin" class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle custom-link"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Admin
+            </a>
+
+            <ul class="dropdown-menu">
+              <li>
+                <RouterLink :to="{ name: 'Emplacements' }" class="dropdown-item custom-link">
+                  Emplacements</RouterLink
+                >
+              </li>
+
+              <li>
+                <RouterLink :to="{ name: 'Réservations' }" class="dropdown-item custom-link"
+                  >Réservations</RouterLink
+                >
+              </li>
+            </ul>
+          </li>
+          <li v-show="!UserInfos.IsConnected" class="nav-item">
+            <RouterLink :to="{ name: 'Connexion' }" class="nav-link custom-link"
+              >Connexion</RouterLink
+            >
+          </li>
+          <li v-show="!UserInfos.IsConnected" class="nav-item">
+            <RouterLink :to="{ name: 'Inscription' }" class="nav-link custom-link"
+              >Inscription</RouterLink
+            >
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn custom-btn-outline">Connexion</button>
+
+          <button class="btn custom-btn">Inscription</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</template>
+<script setup>
+import { RouterLink } from 'vue-router'
+import * as authStore from '../stores/auth'
+import { toRefs } from 'vue'
+const UserInfos = toRefs(authStore.UserInfos)
+</script>
+<style scoped>
+.custom-navbar {
+  background: rgba(25, 55, 35, 0.92);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.brand-title {
+  color: #f8f5ee;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.custom-link {
+  color: #e8f1e8;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.custom-link:hover {
+  color: #9fe870;
+  transform: translateY(-1px);
+}
+
+.custom-btn {
+  background: #6ba368;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.custom-btn:hover {
+  background: #5a9157;
+  transform: translateY(-2px);
+}
+
+.custom-btn-outline {
+  border: 2px solid #9fe870;
+  color: #9fe870;
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.custom-btn-outline:hover {
+  background: #9fe870;
+  color: #1f3a27;
+}
+</style>
