@@ -1,23 +1,18 @@
 <template>
-  <div class="alert-box" :class="isSuccess ? 'success-box' : 'error-box'">
-    <p class="alert-message" :class="isSuccess ? 'success-text' : 'error-text'">
-      {{ message }}
+  <div
+    v-if="AlertStore.Message"
+    class="alert-box"
+    :class="!AlertStore.hasError ? 'success-box' : 'error-box'"
+  >
+    <p class="alert-message" :class="!AlertStore.hasError ? 'success-text' : 'error-text'">
+      {{ AlertStore.Message }}
     </p>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  message: {
-    type: String,
-    required: true,
-  },
-
-  isSuccess: {
-    type: Boolean,
-    default: false,
-  },
-})
+import Alert from '../stores/alert'
+const AlertStore = Alert() // on doit l'instancier pour accéder à ses propriétés réactives
 </script>
 
 <style scoped>

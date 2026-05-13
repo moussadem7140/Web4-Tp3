@@ -15,30 +15,31 @@
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <RouterLink :to="{ name: 'Accueil' }" class="nav-link custom-link">Accueil</RouterLink>
+            <RouterLink :to="{ name: 'Home' }" class="nav-link custom-link">Accueil</RouterLink>
           </li>
 
           <li class="nav-item">
-            <RouterLink :to="{ name: 'Mes Emplacements' }" class="nav-link custom-link"
+            <RouterLink :to="{ name: 'Campsites' }" class="nav-link custom-link"
               >Emplacements</RouterLink
             >
           </li>
-          <li v-show="UserInfos.IsConnected" class="nav-item">
-            <RouterLink :to="{ name: 'Mes Réservations' }" class="nav-link custom-link"
+          <li v-show="authStore.isAuthenticated" class="nav-item">
+            <RouterLink :to="{ name: 'Reservations' }" class="nav-link custom-link"
               >Mes Réservations</RouterLink
             >
           </li>
-          <li v-show="UserInfos.IsConnected" class="nav-item">
-            <RouterLink :to="{ name: 'Profil' }" class="nav-link custom-link"
-              >{{ UserInfos.Nom }}, {{ UserInfos.Prenom }}</RouterLink
+          <li v-show="authStore.isAuthenticated" class="nav-item">
+            <RouterLink
+              v-show="authStore.isAuthenticated"
+              :to="{ name: 'Profile' }"
+              class="nav-link custom-link"
+              >{{ UserInfos?.lastName }}, {{ UserInfos?.firstName }}</RouterLink
             >
           </li>
-          <li v-show="UserInfos.IsConnected" class="nav-item">
-            <RouterLink :to="{ name: 'Deconnexion' }" class="nav-link custom-link"
-              >Déconnexion</RouterLink
-            >
+          <li v-show="authStore.isAuthenticated" class="nav-item">
+            <button class="nav-link custom-link" @click="authStore.logout">Déconnexion</button>
           </li>
-          <li v-show="UserInfos.IsAdmin" class="nav-item dropdown">
+          <li v-show="authStore?.isAdmin" class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle custom-link"
               role="button"
@@ -50,44 +51,39 @@
 
             <ul class="dropdown-menu">
               <li>
-                <RouterLink :to="{ name: 'Emplacements' }" class="dropdown-item custom-link">
+                <RouterLink :to="{ name: 'Campsites' }" class="dropdown-item custom-link">
                   Emplacements</RouterLink
                 >
               </li>
 
               <li>
-                <RouterLink :to="{ name: 'Réservations' }" class="dropdown-item custom-link"
+                <RouterLink :to="{ name: 'Reservations' }" class="dropdown-item custom-link"
                   >Réservations</RouterLink
                 >
               </li>
             </ul>
           </li>
-          <li v-show="!UserInfos.IsConnected" class="nav-item">
-            <RouterLink :to="{ name: 'Connexion' }" class="nav-link custom-link"
+          <li v-show="!authStore.isAuthenticated" class="nav-item">
+            <RouterLink :to="{ name: 'connexion' }" class="nav-link custom-link"
               >Connexion</RouterLink
             >
           </li>
-          <li v-show="!UserInfos.IsConnected" class="nav-item">
-            <RouterLink :to="{ name: 'Inscription' }" class="nav-link custom-link"
+          <li v-show="!authStore.isAuthenticated" class="nav-item">
+            <RouterLink :to="{ name: 'Register' }" class="nav-link custom-link"
               >Inscription</RouterLink
             >
           </li>
         </ul>
-
-        <div class="d-flex align-items-center gap-3">
-          <button class="btn custom-btn-outline">Connexion</button>
-
-          <button class="btn custom-btn">Inscription</button>
-        </div>
       </div>
     </div>
   </nav>
 </template>
 <script setup>
 import { RouterLink } from 'vue-router'
-import * as authStore from '../stores/auth'
-import { toRefs } from 'vue'
-const UserInfos = toRefs(authStore.UserInfos)
+import auth from '../stores/auth'
+import { storeToRefs } from 'pinia'
+const authStore = auth() // on doit l'instancier pour accéder à ses propriétés réactives
+const UserInfos = storeToRefs(authStore).UserInfos
 </script>
 <style scoped>
 .custom-navbar {
