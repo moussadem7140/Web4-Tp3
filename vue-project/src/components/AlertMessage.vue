@@ -11,8 +11,17 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
 import Alert from '../stores/alert'
 const AlertStore = Alert() // on doit l'instancier pour accéder à ses propriétés réactives
+watch(
+  () => AlertStore.Message,
+  (newMessage) => {
+    if (newMessage) {
+      AlertStore.Effacer() // Efface le message après un délai
+    }
+  },
+)
 </script>
 
 <style scoped>

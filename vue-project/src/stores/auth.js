@@ -56,6 +56,9 @@ const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     const router = useRouter()
+    const AlertStore = alert() // on doit l'instancier pour accéder à ses propriétés réactives
+    AlertStore.hasError = false
+    AlertStore.Message = 'Déconnexion réussie'
     router.push('/login') // Rediriger vers la page de connexion après la déconnexion
     // Supprimer le token de localStorage
     // localStorage.removeItem('token'); // Supprimer le token de localStorage

@@ -1,9 +1,8 @@
 // Petit client HTTP
 // Gère le header Authorization si un token est présent, parse JSON sauf 204.
-
 export async function apiFetch(path, options = {}) {
   // import.meta.env disponible via Vite; fallback local si non défini
-  const base = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+  const base = import.meta.env.VITE_API_URL || 'http://localhost:3000'
   const apiKey = import.meta.env.VITE_API_KEY || ''
   const token = localStorage.getItem('token')
   const headers = {

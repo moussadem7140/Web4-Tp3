@@ -43,7 +43,7 @@
       </div>
 
       <RouterLink
-        :to="{ name: 'CampsiteDetails', params: { id: campsite.id } }"
+        :to="{ name: 'CampsiteDetails', params: { id: campsite._id } }"
         class="details-btn mt-auto text-center custom-link"
         >Réserver</RouterLink
       >
