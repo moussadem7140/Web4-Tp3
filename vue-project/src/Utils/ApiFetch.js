@@ -9,15 +9,23 @@ export async function apiFetch(path, options = {}) {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     'x-api-key': apiKey,
-    ...options.headers,
   }
   // Si path est une URL absolue (http/https), on ne préfixe pas avec la base
   const isAbsolute = /^https?:\/\//i.test(path)
   const url = isAbsolute ? path : base + path
+  console.log('apiKey:', apiKey)
+  console.log('base:', base)
+  console.log({ ...options, headers })
   const res = await fetch(url, { ...options, headers })
+  console.log(res.json)
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`HTTP ${res.status} ${text || ''}`.trim())
+    // const text = await res.text()
+    // throw new Error(`HTTP ${res.status} ${text || ''}`.trim())
+    const errorData = await res.json()
+    const error = new Error(errorData.message || 'Erreur inconnue')
+    error.status = res.status
+
+    throw error
   }
   if (res.status === 204) return null
   // Tenter JSON, sinon renvoyer texte

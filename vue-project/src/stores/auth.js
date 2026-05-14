@@ -4,12 +4,14 @@ import { ref, computed } from 'vue'
 import { apiFetch } from '../Utils/ApiFetch'
 import alert from './alert'
 import { useRouter } from 'vue-router'
+
 const useAuthStore = defineStore('auth', () => {
   const AlertStore = alert() // on doit l'instancier pour accéder à ses propriétés réactives
-  const token = ref(localStorage.getItem('token') ? localStorage.getItem('token') : null) //moi je le rendre persistant dans le localStorage
-  const UserInfos = ref(
-    localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-  )
+  const router = useRouter()
+  let savedUser = localStorage.getItem('user')
+  let savedToken = localStorage.getItem('token')
+  const token = ref(savedToken && savedToken !== 'undefined' ? savedToken : null) //moi je le rend persistant dans le localStorage
+  const UserInfos = ref(savedUser && savedUser !== 'undefined' ? JSON.parse(savedUser) : null)
   // ou récupérer le token depuis localStorage si on l'utilise
   // const token = ref(localStorage.getItem('token') || null);
   // ou depuis un Cookie sécurisé
@@ -28,25 +30,27 @@ const useAuthStore = defineStore('auth', () => {
   const isAdmin = computed(() => {
     return UserInfos.value?.role === 'admin' || false
   })
-  async function login(username, password) {
+  async function login(emails, passwords) {
     try {
-      const response = await apiFetch('/auth/login', {
+      const data = await apiFetch('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email: emails, password: passwords }),
       })
-      const data = await response.json()
-      UserInfos.value = data.user // Stocker les infos utilisateur dans le store
-      localStorage.setItem('user', JSON.stringify(data.user)) // Stocker les infos utilisateur dans localStorage
-      token.value = data.token
-      localStorage.setItem('token', data.token) // Stocker le token dans localStorage
+      console.log(data)
+      UserInfos.value = data.data.user // Stocker les infos utilisateur dans le store
+      localStorage.setItem('user', JSON.stringify(data.data.user)) // Stocker les infos utilisateur dans localStorage
+      token.value = data.data.token
+      localStorage.setItem('token', data.data.token) // Stocker le token dans localStorage
 
       // Enregistrer le token dans localStorage si on veut le conserver après un rechargement de la page
       //   localStorage.setItem("token", data.token); // Stocker le token dans localStorage
       // Ou utiliser un Cookie (HttpOnly est côté serveur)
       // document.cookie = `token=${data.token}; Secure; SameSite=Strict; Max-Age=3600`
     } catch (error) {
-      AlertStore.hasError = true
-      AlertStore.Message = error.message || 'Erreur lors de la connexion'
+      // AlertStore.hasError = true
+      // AlertStore.Message = error.message || 'Erreur lors de la connexion'
+      console.error('Login error:', error.message)
+      throw error // Propager l'erreur pour que le composant puisse la gérer et afficher un message approprié
     }
   }
 
@@ -55,11 +59,10 @@ const useAuthStore = defineStore('auth', () => {
     UserInfos.value = null
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    const router = useRouter()
     const AlertStore = alert() // on doit l'instancier pour accéder à ses propriétés réactives
     AlertStore.hasError = false
     AlertStore.Message = 'Déconnexion réussie'
-    router.push('/login') // Rediriger vers la page de connexion après la déconnexion
+    router.push({ name: 'connexion' }) // Rediriger vers la page de connexion après la déconnexion
     // Supprimer le token de localStorage
     // localStorage.removeItem('token'); // Supprimer le token de localStorage
     // ou suppression du Cookie
