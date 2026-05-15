@@ -153,10 +153,7 @@ async function creerCompte() {
       router.push('/connexion')
     } catch (error) {
       AlertStore.hasError = true
-      AlertStore.Message =
-        error.response?.data?.message ||
-        error.message ||
-        'Une erreur est survenue lors de la création du compte.'
+      AlertStore.Message = error.message || 'Une erreur est survenue lors de la création du compte.'
     }
   }
 }

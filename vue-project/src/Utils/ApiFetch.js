@@ -23,8 +23,8 @@ export async function apiFetch(path, options = {}) {
     // throw new Error(`HTTP ${res.status} ${text || ''}`.trim())
     const errorData = await res.json()
     const error = new Error(errorData.message || 'Erreur inconnue')
-    error.status = res.status
-
+    //j'ajoute la propriété status au message d'erreur pour pouvoir l'afficher dans le composant
+    error.message = `${res.status} - ${error.message}`
     throw error
   }
   if (res.status === 204) return null

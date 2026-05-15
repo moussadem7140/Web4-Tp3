@@ -83,7 +83,7 @@ import { RouterLink } from 'vue-router'
 import auth from '../stores/auth'
 import { storeToRefs } from 'pinia'
 const authStore = auth() // on doit l'instancier pour accéder à ses propriétés réactives
-const UserInfos = storeToRefs(authStore).UserInfos
+const { UserInfos } = storeToRefs(authStore)
 </script>
 <style scoped>
 .custom-navbar {

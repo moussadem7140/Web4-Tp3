@@ -9,7 +9,7 @@ const useAlertStore = defineStore('alert', () => {
     setTimeout(() => {
       hasError.value = false
       Message.value = ''
-    }, 5000) // Efface le message après 5 secondes  c'est mieux que le afterEach que j'avais mis
+    }, 10000) // Efface le message après 10 secondes  c'est mieux que le afterEach que j'avais mis
   }
   return {
     hasError,

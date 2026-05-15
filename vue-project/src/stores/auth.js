@@ -41,7 +41,6 @@ const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('user', JSON.stringify(data.data.user)) // Stocker les infos utilisateur dans localStorage
       token.value = data.data.token
       localStorage.setItem('token', data.data.token) // Stocker le token dans localStorage
-
       // Enregistrer le token dans localStorage si on veut le conserver après un rechargement de la page
       //   localStorage.setItem("token", data.token); // Stocker le token dans localStorage
       // Ou utiliser un Cookie (HttpOnly est côté serveur)
@@ -52,6 +51,12 @@ const useAuthStore = defineStore('auth', () => {
       console.error('Login error:', error.message)
       throw error // Propager l'erreur pour que le composant puisse la gérer et afficher un message approprié
     }
+  }
+
+  function EnregistrerInfos(infos) {
+    console.log('EnregistrerInfos called with:', infos.data)
+    UserInfos.value = infos.data
+    localStorage.setItem('user', JSON.stringify(infos.data)) // Mettre à jour les infos utilisateur dans localStorage après la modification du profil
   }
 
   function logout() {
@@ -76,6 +81,7 @@ const useAuthStore = defineStore('auth', () => {
     logout,
     UserInfos,
     isAdmin,
+    EnregistrerInfos,
   }
 })
 export default useAuthStore

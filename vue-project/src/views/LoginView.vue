@@ -96,7 +96,7 @@ async function Connexion() {
       router.push('/')
     } catch (error) {
       AlertStore.hasError = true
-      AlertStore.Message = error.status + ': ' + error.message || 'Erreur lors de la connexion'
+      AlertStore.Message = error.message || 'Erreur lors de la connexion'
     }
   }
 }
