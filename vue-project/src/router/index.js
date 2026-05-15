@@ -51,7 +51,7 @@ const router = createRouter({
     },
 
     {
-      path: '/reservation/:id',
+      path: '/reservations/:id',
       name: 'ReservationDetail',
       component: ReservationDetailView,
       // Page protégée, il faut être connecté pour y accéder
@@ -87,7 +87,9 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return { path: '/connexion', query: { redirect: to.fullPath } }
   }
-  if (to.meta.requiresAdmin && !authStore.UserInfos.IsAdmin) {
+
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    console.warn('Accès refusé : utilisateur non admin')
     AlertStore.hasError = true
     AlertStore.Message = "Accès refusé (403) : vous n'êtes pas administrateur."
     return { path: '/' }

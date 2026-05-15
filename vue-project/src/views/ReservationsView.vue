@@ -70,7 +70,7 @@
               <div class="d-flex gap-2 flex-wrap">
                 <RouterLink
                   :to="{
-                    name: 'ReservationDetails',
+                    name: 'ReservationDetail',
                     params: { id: reservation._id },
                   }"
                   class="btn btn-sm details-btn"
@@ -98,15 +98,22 @@
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiFetch } from '../Utils/ApiFetch'
-
+import alert from '../stores/alert'
+const AlertStore = alert() // on doit l'instancier pour accéder à ses propriétés réactives
 const reservations = ref([])
 
 onMounted(async () => {
-  const response = await apiFetch('/reservations')
-
-  reservations.value = response.data
+  await getReservations()
+  AlertStore.hasError = false
+  AlertStore.Message = 'Réservations chargées avec succès.'
 })
-
+async function getReservations() {
+  const response = await apiFetch('/reservations', {
+    method: 'GET',
+  })
+  reservations.value = response.data
+}
+//j'arrive pas à mette directement, ça me met une erreur
 function statusClass(status) {
   if (status === 'pending') {
     return 'pending'
@@ -124,17 +131,17 @@ function statusClass(status) {
 }
 
 async function cancelReservation(id) {
-  await apiFetch(`/reservations/${id}/cancel`, {
+  await apiFetch(`/reservations/${id}`, {
     method: 'PATCH',
+    body: JSON.stringify({
+      status: 'cancelled',
+    }),
   })
-
-  const reservation = reservations.value.find((r) => r._id === id)
-
-  if (reservation) {
-    reservation.status = 'cancelled'
-  }
+  AlertStore.hasError = false
+  AlertStore.Message = 'Réservation annulée avec succès.'
+  await getReservations() // Rafraîchir la liste des réservations après l'annulation
 }
-
+//Pour formater les dates dans le tableau, vu  sur internet..
 function formatDate(date) {
   return new Date(date).toLocaleDateString('fr-CA')
 }

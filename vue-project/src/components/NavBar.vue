@@ -39,27 +39,27 @@
           <li v-show="authStore.isAuthenticated" class="nav-item">
             <button class="nav-link custom-link" @click="authStore.logout">Déconnexion</button>
           </li>
-          <li v-show="authStore?.isAdmin" class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle custom-link"
-              role="button"
+          <li v-show="authStore.isAdmin" class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle custom-link btn btn-link"
+              type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               Admin
-            </a>
+            </button>
 
             <ul class="dropdown-menu">
               <li>
-                <RouterLink :to="{ name: 'Campsites' }" class="dropdown-item custom-link">
-                  Emplacements</RouterLink
-                >
+                <RouterLink :to="{ name: 'AdminCampsites' }" class="dropdown-item">
+                  Emplacements
+                </RouterLink>
               </li>
 
               <li>
-                <RouterLink :to="{ name: 'Reservations' }" class="dropdown-item custom-link"
-                  >Réservations</RouterLink
-                >
+                <RouterLink :to="{ name: 'AdminReservations' }" class="dropdown-item">
+                  Réservations
+                </RouterLink>
               </li>
             </ul>
           </li>
@@ -86,6 +86,32 @@ const authStore = auth() // on doit l'instancier pour accéder à ses propriét�
 const { UserInfos } = storeToRefs(authStore)
 </script>
 <style scoped>
+.dropdown {
+  position: relative;
+}
+.custom-navbar {
+  position: relative;
+  z-index: 9999;
+  overflow: visible !important;
+}
+
+.navbar-collapse {
+  overflow: visible !important;
+}
+
+.dropdown-menu {
+  z-index: 10000 !important;
+  background: white;
+}
+.dropdown-menu {
+  position: absolute;
+}
+.dropdown-menu {
+  z-index: 9999;
+}
+.custom-navbar {
+  overflow: visible !important;
+}
 .custom-navbar {
   background: rgba(25, 55, 35, 0.92);
   backdrop-filter: blur(10px);

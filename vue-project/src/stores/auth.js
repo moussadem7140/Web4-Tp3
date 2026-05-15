@@ -28,6 +28,8 @@ const useAuthStore = defineStore('auth', () => {
     return false
   })
   const isAdmin = computed(() => {
+    console.log('UserInfos:', UserInfos.value)
+    console.log('UserInfos.role:', UserInfos.value?.role === 'admin')
     return UserInfos.value?.role === 'admin' || false
   })
   async function login(emails, passwords) {
